@@ -1,0 +1,38 @@
+{
+  "name": "ZSArduinoCamBufferUtils",
+  "description": "Common functionality to draw shapes or text into a camera buffer object",
+  "version": "1.0.0",
+  "keywords": [
+    "raster",
+    "camera buffer",
+    "arduino"
+  ],
+  "authors": [
+    {
+      "name": "Nicky Santamaria",
+      "email": "ndsans@gmail.com"
+    }
+  ],
+  "license": "GPL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zuzsso/ZSArduinoCamBufferUtils.git"
+  },
+  "dependencies": [
+    {
+      "name": "ZSArduinoSerialToolkit",
+      "version": "https://github.com/zuzsso/ZSArduinoSerialToolkit@2.2.0"
+    },
+    {
+      "name": "ZSArduinoImaGeometry",
+      "version": "https://github.com/zuzsso/ZSArduinoImaGeometry@2.0.6"
+    }
+  ],
+  "frameworks": [
+    "arduino"
+  ],
+  "platforms": [
+    "arduino",
+    "espressif32"
+  ]
+}
