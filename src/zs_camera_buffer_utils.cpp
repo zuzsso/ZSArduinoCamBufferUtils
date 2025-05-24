@@ -2,6 +2,7 @@
 #include <esp_camera.h>
 #include <zs_serial_port_utils.h>
 #include <zs_imageometry.h>
+#include <stdio.h>
 
 namespace ZS
 {
@@ -192,6 +193,48 @@ namespace ZS
                 ZS::ImaGeometry::ImageLine il = ZS::ImaGeometry::ImageLine(vertices[i], vertices[(i + 1) % n]);
                 drawLine(il, frame, color);
             }
+        }
+
+        uint8_t getGrayscaleIndex(camera_fb_t *frame, int x, int y)
+        {
+
+            uint8_t *data = frame->buf;
+            int width = frame->width;
+            int height = frame->height;
+
+            char buffer[100];
+
+            if (!((x >= 0) && (x < width)))
+            {
+                sprintf(buffer, "X coordinate out of bounds. Given: %d. Available:[0, %d]", x, (width - 1));
+                ZS::SerialPort::runtimeException(buffer);
+            }
+
+            if (!((y >= 0) && (y < height)))
+            {
+                sprintf(buffer, "Y coordinate out of bounds. Given: %d. Avaiable:[0, %d]", y, (height - 1));
+                ZS::SerialPort::runtimeException(buffer);
+            }
+
+            if (frame->format == PIXFORMAT_RGB565)
+            {
+                int index = ((y * width) + x) * 2;
+                uint8_t high = data[index + 1];
+                uint8_t low = data[index];
+                uint16_t color = (high << 8) | low;
+                int r = ((color >> 11) & 0x1F) << 3; // 5 bits → 8 bits
+                int g = ((color >> 5) & 0x3F) << 2;  // 6 bits → 8 bits
+                int b = (color & 0x1F) << 3;
+
+                return (uint8_t)(0.299 * r + 0.587 * g + 0.114 * b);
+            }
+
+            if (frame->format == PIXFORMAT_GRAYSCALE)
+            {
+                return (uint8_t)data[(y * width) + x];
+            }
+
+            ZS::SerialPort::runtimeException("Only buffer formats available are 'PIXFORMAT_RGB565' and 'PIXFORMAT_GRAYSCALE'");
         }
     }
 }
