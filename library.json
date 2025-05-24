@@ -1,7 +1,7 @@
 {
   "name": "ZSArduinoCamBufferUtils",
   "description": "Common functionality to draw shapes or text into a camera buffer object",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "keywords": [
     "raster",
     "camera buffer",
