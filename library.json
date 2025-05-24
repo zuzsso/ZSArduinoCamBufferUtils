@@ -21,11 +21,11 @@
   "dependencies": [
     {
       "name": "ZSArduinoSerialToolkit",
-      "version": "https://github.com/zuzsso/ZSArduinoSerialToolkit@2.2.0"
+      "version": "https://github.com/zuzsso/ZSArduinoSerialToolkit@^2.2"
     },
     {
       "name": "ZSArduinoImaGeometry",
-      "version": "https://github.com/zuzsso/ZSArduinoImaGeometry@2.0.7"
+      "version": "https://github.com/zuzsso/ZSArduinoImaGeometry@^2.0"
     }
   ],
   "frameworks": [
