@@ -156,11 +156,14 @@ namespace ZS
         {
             checkImagePreconditions(fb);
             if (x >= fb->width || y >= fb->height)
-                return;
+            {
+                ZS::SerialPort::runtimeException("Cannot draw pixel. Coordinates out of image limits");
+            }
             if (fb->format == PIXFORMAT_RGB565)
             {
-                uint16_t *buf = (uint16_t *)fb->buf;
-                buf[y * fb->width + x] = coloRgb565;
+                size_t index = (y * fb->width + x) * 2;
+                fb->buf[index] = coloRgb565 >> 8;
+                fb->buf[index + 1] = coloRgb565 & 0xFF;                
             }
             else if (fb->format == PIXFORMAT_GRAYSCALE)
             {
@@ -403,11 +406,11 @@ namespace ZS
 
                 uint8_t *pixelPtr = frame->buf + index;
 
-                // Combine two bytes into one uint16_t                
+                // Combine two bytes into one uint16_t
                 uint8_t highAux = data[index + 1];
                 uint8_t lowAux = data[index];
                 uint16_t pixel = (highAux << 8) | lowAux;
-                return convertRgb565ToGrayscaleIndex(pixel);                
+                return convertRgb565ToGrayscaleIndex(pixel);
             }
 
             if (frame->format == PIXFORMAT_GRAYSCALE)
@@ -418,7 +421,7 @@ namespace ZS
             ZS::SerialPort::runtimeException("Only buffer formats available are 'PIXFORMAT_RGB565' and 'PIXFORMAT_GRAYSCALE'");
 
             // Avoids compiler warning
-            return 0; 
+            return 0;
         }
     }
 }
