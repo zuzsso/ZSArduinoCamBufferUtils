@@ -193,7 +193,7 @@ namespace ZS
         {
             checkImagePreconditions(frame);
             int cursorX = coordinate->getX();
-            int cursorY = coordinate->getY(); 
+            int cursorY = coordinate->getY();
             while (*text)
             {
                 drawChar5x7(frame, *text, cursorX, cursorY, color);
@@ -401,15 +401,13 @@ namespace ZS
             {
                 int index = ((y * width) + x) * 2;
 
-                return convertRgb565ToGrayscaleIndex(index);
-                // uint8_t high = data[index + 1];
-                // uint8_t low = data[index];
-                // uint16_t color = (high << 8) | low;
-                // int r = ((color >> 11) & 0x1F) << 3; // 5 bits → 8 bits
-                // int g = ((color >> 5) & 0x3F) << 2;  // 6 bits → 8 bits
-                // int b = (color & 0x1F) << 3;
+                uint8_t *pixelPtr = frame->buf + index;
 
-                // return (uint8_t)(0.299 * r + 0.587 * g + 0.114 * b);
+                // Combine two bytes into one uint16_t                
+                uint8_t highAux = data[index + 1];
+                uint8_t lowAux = data[index];
+                uint16_t pixel = (highAux << 8) | lowAux;
+                return convertRgb565ToGrayscaleIndex(pixel);                
             }
 
             if (frame->format == PIXFORMAT_GRAYSCALE)
@@ -419,7 +417,8 @@ namespace ZS
 
             ZS::SerialPort::runtimeException("Only buffer formats available are 'PIXFORMAT_RGB565' and 'PIXFORMAT_GRAYSCALE'");
 
-            return 0; // Avoids compiler warning
+            // Avoids compiler warning
+            return 0; 
         }
     }
 }
