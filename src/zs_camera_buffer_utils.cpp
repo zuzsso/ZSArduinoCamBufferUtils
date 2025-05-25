@@ -112,12 +112,13 @@ namespace ZS
         {
             checkImagePreconditions(frame);
 
-            std::vector<ZS::ImaGeometry::ImageLine> edges = r.getEdges();
 
-            for (const ZS::ImaGeometry::ImageLine edge : edges)
-            {
-                drawLine(edge, frame, color);
-            }
+            // std::vector<ZS::ImaGeometry::ImageLine> edges = r.getEdges();
+
+            // for (const ZS::ImaGeometry::ImageLine edge : edges)
+            // {
+            //     drawLine(edge, frame, color);
+            // }
         }
 
         void draw5x3Char(camera_fb_t *frame, ZS::ImaGeometry::ImageCoordinate coord, char c, uint16_t color)
