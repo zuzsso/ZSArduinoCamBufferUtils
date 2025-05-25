@@ -21,15 +21,15 @@ namespace ZS
             }
         }
 
-        void drawLine(ZS::ImaGeometry::ImageLine line, camera_fb_t *frame, uint16_t color)
+        void drawLine(ZS::ImaGeometry::ImageLine *line, camera_fb_t *frame, uint16_t color)
         {
             checkImagePreconditions(frame);
 
-            int x0 = line.getStart().getX();
-            int y0 = line.getStart().getY();
+            int x0 = line->getStart().getX();
+            int y0 = line->getStart().getY();
 
-            int x1 = line.getEnd().getX();
-            int y1 = line.getEnd().getY();
+            int x1 = line->getEnd().getX();
+            int y1 = line->getEnd().getY();
 
             int dx = abs(x1 - x0);
             int dy = -abs(y1 - y0);
@@ -62,14 +62,14 @@ namespace ZS
             }
         }
 
-        void drawCircle(ZS::ImaGeometry::Circle c, camera_fb_t *frame, uint16_t color)
+        void drawCircle(ZS::ImaGeometry::Circle *circle, camera_fb_t *frame, uint16_t color)
         {
             checkImagePreconditions(frame);
 
-            int x = 0, y = c.getRadiusPx();
-            int d = 3 - 2 * c.getRadiusPx();
-            int xc = c.getCenter().getX();
-            int yc = c.getCenter().getY();
+            int x = 0, y = circle->getRadiusPx();
+            int d = 3 - 2 * circle->getRadiusPx();
+            int xc = circle->getCenter().getX();
+            int yc = circle->getCenter().getY();
 
             while (y >= x)
             {
@@ -108,17 +108,16 @@ namespace ZS
             }
         }
 
-        void drawRectangle(ZS::ImaGeometry::Rectangle r, camera_fb_t *frame, uint16_t color)
+        void drawRectangle(ZS::ImaGeometry::Rectangle *rectangle, camera_fb_t *frame, uint16_t color)
         {
             checkImagePreconditions(frame);
 
+            std::vector<ZS::ImaGeometry::ImageLine> edges = rectangle->getEdges();
 
-            // std::vector<ZS::ImaGeometry::ImageLine> edges = r.getEdges();
-
-            // for (const ZS::ImaGeometry::ImageLine edge : edges)
-            // {
-            //     drawLine(edge, frame, color);
-            // }
+            for (ZS::ImaGeometry::ImageLine edge : edges)
+            {
+                drawLine(&edge, frame, color);
+            }
         }
 
         void draw5x3Char(camera_fb_t *frame, ZS::ImaGeometry::ImageCoordinate coord, char c, uint16_t color)
@@ -168,31 +167,31 @@ namespace ZS
             }
         }
 
-        void draw5x3Text(ZS::ImaGeometry::ImageCoordinate insertionPoint, const char *text, camera_fb_t *frame, uint16_t color)
+        void draw5x3Text(ZS::ImaGeometry::ImageCoordinate *insertionPoint, const char *text, camera_fb_t *frame, uint16_t color)
         {
             checkImagePreconditions(frame);
 
-            int x = insertionPoint.getX();
+            int x = insertionPoint->getX();
 
             while (*text)
             {
-                draw5x3Char(frame, ZS::ImaGeometry::ImageCoordinate(x, insertionPoint.getY()), *text, color);
+                draw5x3Char(frame, ZS::ImaGeometry::ImageCoordinate(x, insertionPoint->getY()), *text, color);
                 x += 6; // 5px wide + 1px spacing
                 text++;
             }
         }
 
-        void drawConvexArea(ZS::ImaGeometry::ConvexArea area, camera_fb_t *frame, uint16_t color)
+        void drawConvexArea(ZS::ImaGeometry::ConvexArea *area, camera_fb_t *frame, uint16_t color)
         {
             checkImagePreconditions(frame);
 
-            std::vector<ZS::ImaGeometry::ImageCoordinate> vertices = area.getVertices();
+            std::vector<ZS::ImaGeometry::ImageCoordinate> vertices = area->getVertices();
 
             int n = vertices.size();
             for (int i = 0; i < n; i++)
             {
                 ZS::ImaGeometry::ImageLine il = ZS::ImaGeometry::ImageLine(vertices[i], vertices[(i + 1) % n]);
-                drawLine(il, frame, color);
+                drawLine(&il, frame, color);
             }
         }
 
@@ -236,6 +235,8 @@ namespace ZS
             }
 
             ZS::SerialPort::runtimeException("Only buffer formats available are 'PIXFORMAT_RGB565' and 'PIXFORMAT_GRAYSCALE'");
+
+            return 0; // Avoids compiler warning
         }
     }
 }
