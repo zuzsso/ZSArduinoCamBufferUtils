@@ -189,7 +189,7 @@ namespace ZS
             }
         }
 
-        void draw5x7Text(ZS::ImaGeometry::ImageCoordinate *coordinate, const char *text, camera_fb_t *frame, uint16_t color)
+        void draw7x5Text(ZS::ImaGeometry::ImageCoordinate *coordinate, const char *text, camera_fb_t *frame, uint16_t color)
         {
             checkImagePreconditions(frame);
             int cursorX = coordinate->getX();
